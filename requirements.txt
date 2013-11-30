@@ -1,0 +1,11 @@
+### base ###
+django<1.6
+
+### helpers ###
+south
+django-template-repl
+django-admin-tools
+django-filter
+django-tables2
+django-bootstrap3
+django-admin-bootstrapped
