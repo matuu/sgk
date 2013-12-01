@@ -88,6 +88,7 @@ MIDDLEWARE_CLASSES = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.i18n',
 )
 
 ROOT_URLCONF = 'sgk.urls'
@@ -108,7 +109,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'bootstrap3',
     'django_admin_bootstrapped.bootstrap3',
     'django_admin_bootstrapped',
