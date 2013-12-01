@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class BaseModel(models.Model):
@@ -68,9 +69,15 @@ class Persona(BaseModel):
     o cualquier otra persona.
 
     """
+    GENERO = (
+        ('F', u'Femenino'),
+        ('M', u'Masculino'),
+        ('O', u'Otro')
+    )
     nombre = models.CharField(u'Nombre', max_length=255)
     apellido = models.CharField(u'Apellido', max_length=255)
     fecha_nacimiento = models.DateField(u'Fecha de nacimiento', help_text="DD/MM/AAAA")
+    genero = models.CharField(u'Género', max_length=1, choices=GENERO, default=u'F')
     estado_civil = models.CharField(u'Estado civíl', max_length=255, default=u'soltero')
     dni = models.IntegerField(u'DNI')
     domicilio = models.CharField(u'Domicilio', max_length=255, blank=True)
@@ -95,6 +102,7 @@ class Profesional(BaseModel):
 
     """
     persona = models.ForeignKey(Persona, verbose_name=u'Persona')
+    usuario = models.ForeignKey(User, verbose_name=u'Usuario', null=True)
     observaciones = models.TextField(u'Observaciones', blank=True)
 
     def __unicode__(self):
@@ -151,8 +159,106 @@ class Turno(BaseModel):
     motivo = models.CharField(u'Motivo', max_length=255, blank=True)
     asistio = models.BooleanField(u'¿Asistió?', default=False)
     aviso = models.BooleanField(u'¿Avisó?')
-    observaciones = models.TextField(u'Observaciones', blank=True)
+    observaciones = models.TextField(u'Observaciones',  blank=True)
+    nombre_paciente = models.CharField(u'Nombre del paciente', max_length=255, blank=True,
+            help_text=u'Dejar en blanco si el paciente se encuentra en el sistema.')
     # relaciones
     profesional = models.ForeignKey(Profesion, verbose_name=u'Profesional')
     paciente = models.ForeignKey(Paciente, verbose_name=u'Paciente', null=True)
 
+    def __unicode__(self):
+        nombre = u''
+        if self.nombre_paciente:
+            nombre = self.nombre_paciente
+        else:
+            nombre = self.paciente.persona.nombre
+        return u"{} - {} {} ({})".format(
+                nombre, self.dia, self.hora,
+                self.profesional.persona.nombre)
+
+    class Meta:
+        verbose_name = u"turno"
+        verbose_name_plural = u"turnos"
+
+
+class MotivoConsulta(BaseModel):
+    """
+    Contiene información sobre el motivo por el cual
+    el paciente debe tomar algunas sesiones.
+
+    """
+    diagnostico_medico = models.TextField(u'Diagnóstico médico',
+            help_text=u'Diagnóstico que elaboró el médico clínico.')
+    evaluacion_kinesica = models.TextField(u'Evaluación Kinésica',
+            help_text=u'Evaluación elaborada por el kinesiólogo/a.')
+    fecha_ingreso = models.DateField(u'Fecha de ingreso', auto_now_add=True)
+    cantidad_sesiones = models.IntegerField(u'Cantidad de sesiones',
+            help_text=u'Cantidad de sesiones necesarias recetadas por el médico.')
+    tratamientos_previos = models.TextField(u'Tratamientos previos',
+            help_text=u'Descripción de tratamientos previos'
+                      u'por el mismo motivo de consulta')
+    fecha_alta = models.DateField(u'Fecha de alta', null=True,
+            help_text=u'Fecha de alta tentativa.')
+    observaciones = models.TextField(u'Observaciones', blank=True)
+
+    def __unicode__(self):
+        return u"{}".format(
+                self.evaluacion_kinesica[:50])
+
+    class Meta:
+        verbose_name = u"motivo de consulta"
+        verbose_name_plural = u"motivos de consulta"
+
+
+class Objetivo(BaseModel):
+    """
+    Representa un objetivo del tratamiento.
+    Puede haber varios para un tratamiento, y se van cumpliendo
+    con el paso de las sesiones.
+
+    """
+    descripcion = models.CharField(u'Descripción', max_length=255)
+    fecha_inicio = models.DateField(u'Fecha de inicio', auto_now_add=True)
+    fecha_cumplido = models.DateField(u'Fecha de éxito', null=True)
+    observaciones = models.TextField(u'Observaciones', blank=True)
+    # relaciones
+    motivo_consulta = models.ForeignKey(MotivoConsulta,
+            verbose_name=u'Motivo de consulta', null=True)
+
+    def __unicode__(self):
+        return u"{}".format(
+                self.descripcion)
+
+    class Meta:
+        verbose_name = u"objectivo"
+        verbose_name_plural = u"objetivos"
+
+
+class Antecedente(BaseModel):
+    """
+    Representa la historia médica del paciente.
+    Contiene datos médicos y relevantes sobre el paciente.
+
+    """
+    paciente = models.ForeignKey(Paciente, verbose_name=u'Paciente')
+    patologicos = models.TextField(u'Patológicos', blank=True)
+    quirurgicos = models.TextField(u'Quirúrgicos', blank=True)
+    traumaticos = models.TextField(u'Traumáticos', blank=True)
+    alergicos = models.TextField(u'Alérgicos', blank=True)
+    heredo_familiar = models.TextField(u'Heredo familiar', blank=True)
+    habitos_fisiologicos = models.TextField(u'Hábitos fisiológicos', blank=True)
+    habitos_patologicos = models.TextField(u'Hábitos patológicos', blank=True)
+    medicaciones = models.TextField(u'Medicaciones', blank=True)
+    estudios_complementarios = models.TextField(u'Estudios complementarios', blank=True)
+    menarca = models.DateField(u'MENARCA', null=True)
+    fum = models.DateField(u'FUM', null=True)
+    tipo_partos = models.TextField(u'Tipo de partos', blank=True)
+    observaciones = models.TextField(u'Observaciones', blank=True)
+
+    def __unicode__(self):
+        return u"Antecedentes de {}".format(
+                self.paciente.persona.nombre)
+
+    class Meta:
+        verbose_name = u"antecedente"
+        verbose_name_plural = u"antecedentes"
