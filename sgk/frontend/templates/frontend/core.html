@@ -1,0 +1,43 @@
+{% load bootstrap3 %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+    {# Load CSS and JavaScript #}
+    <!--link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" /-->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/mdialog.css" />
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
+    <script type="text/javascript" src="{{ STATIC_URL }}jquery-2.0.3.min.js" ></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}mdialog.js" ></script>
+    {% bootstrap_javascript %}
+    <title>{% block title %}·: Sistema de gestión kinesiológico :·{% endblock %} {% block subtitle %}{% endblock %}</title>
+</head>
+<body>
+
+  {% bootstrap_messages %}
+  {% block nav %}{% endblock %}
+  <div class="masthead">
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+  
+  <div id="footer">
+    {% block footer %}{% endblock %}
+  </div>
+<script type="text/javascript">
+      function closeSession(){
+        mconfirm = new mDialogConfirm({
+            title: '¿Cerrar sesión?',
+            message: "Está a punto de cerrar la sesión. ¿Desea continuar?",
+            yes: function() { window.location = {% url 'auth_logout' %}; },
+            type: 'shutdown'
+        }).show();
+      }
+</script>
+{% block script_js %} {% endblock %}
+ <!-- Required for mDialog -->
+<div id="mdialog"></div>
+</body>
+</html>

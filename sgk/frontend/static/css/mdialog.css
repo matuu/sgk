@@ -1,0 +1,125 @@
+.moverlay{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #666;
+    z-index:1001;
+    opacity:.60;
+    -moz-opacity: 0.60;
+    filter: alpha(opacity=60);
+}
+
+.mmodal {
+    display: none;
+    position: fixed;
+    padding: 16px;
+    color: #444;
+    z-index:1002;
+    overflow: auto;
+    background-color:#FcFcFc;
+    width:30%;
+    padding:15px;
+    text-align:left;
+    border:1px solid #aaa;
+    font-size:18px;
+    -moz-border-radius: 6px 6px 6px 6px;
+    -webkit-border-radius: 6px 6px 6px 6px;
+    border-radius: 6px 6px 6px 6px;
+    -moz-box-shadow: 0 0 50px #444;
+    -webkit-box-shadow: 0 0 50px #444;
+}
+
+.mmodal h2 {
+    margin:0px;
+    padding:10px 0 10px 45px; /*padding:10px 0;*/
+    border-bottom:1px solid #999;
+    font-size:16px;
+  }
+
+.mmodal h3
+{
+    margin-left:13px;
+    text-align:center;
+}
+  
+/*Permite especificar el icono del header del dialogo
+Valores permitidos: info, warn, shutdown*/
+#infoH2
+{
+    background:url(../img/info.png) 4% 50% no-repeat;
+} 
+#warnH2
+{
+    background:url(../img/warning.png) 4% 50% no-repeat;
+} 
+#shutdownH2
+{
+    background:url(../img/shut_down.png) 4% 50% no-repeat;
+}  
+
+.mbutton
+{
+    width:80px;
+    height:34px;
+    margin: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #444444;
+    display: inline-block;
+    vertical-align : baseline;
+    cursor : pointer;
+    text-decoration : none;
+    font-weight :bold;
+    font-size :13px;
+    -webkit-border-radius: 2px 2px 2px 2px;
+    -moz-border-radius: 2px 2px 2px 2px;
+    border-radius: 2px 2px 2px 2px;
+    background-color: #F5F5F5;
+
+}
+  
+  
+#mbYes:hover
+{
+    background-color: #669955;
+    color: #eee;
+}
+#mbNo:hover
+{
+    background-color: #996655;
+    color: #eee;
+}
+.mmodal #mmessage
+{
+    margin: 15px;
+    width:94%;
+    text-align:left;
+}
+
+.mmodal p
+{
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom: 2px;
+    width:100%;
+    text-align:right;
+}
+  
+#closeX
+{
+	float: right;
+	display: block;
+	cursor: pointer;
+	font-weight: bold;
+	font-size:14px;
+	position: relative;
+    right: -5px;
+    top: -10px;
+}
+
+#closeX:hover {
+	color: #222;
+	
+}

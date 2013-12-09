@@ -24,3 +24,5 @@ MEDIA_ROOT = os.path.join(PROJECT_DIR, '../media/')
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
 STATIC_ROOT = os.path.join(PROJECT_DIR, '../collected_static/')
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

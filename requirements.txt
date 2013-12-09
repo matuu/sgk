@@ -9,3 +9,4 @@ django-filter
 django-tables2
 django-bootstrap3
 django-admin-bootstrapped
+pynliner
