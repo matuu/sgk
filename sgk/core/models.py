@@ -151,7 +151,7 @@ class Turno(BaseModel):
     nombre_paciente = models.CharField(u'Nombre del paciente', max_length=255, blank=True,
             help_text=u'Dejar en blanco si el paciente se encuentra en el sistema.')
     # relaciones
-    profesional = models.ForeignKey(Profesion, verbose_name=u'Profesional')
+    profesional = models.ForeignKey(Profesional, verbose_name=u'Profesional')
     paciente = models.ForeignKey(Paciente, verbose_name=u'Paciente', null=True)
 
     def __unicode__(self):

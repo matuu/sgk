@@ -1,6 +1,6 @@
 {% extends 'frontend/core.html' %}
 {% block nav %}
-<div class="navbar navbar-default navbar-fixed-top">
+<div class="navbar navbar-default"> {# navbar-fixed-top">#}
       <div class="container">
         <div class="navbar-header">
           <a href="../" class="navbar-brand">Sistema de Gestión Kinesiológico</a>
@@ -15,12 +15,12 @@
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Gestión <span class="caret"></span></a>
               <ul class="dropdown-menu" aria-labelledby="themes">
-                <li><a tabindex="-1" href="../default/">Turnos</a></li>
+                <li><a tabindex="-1" href="../turnos/">Turnos</a></li>
                 <li class="divider"></li>
-                <li><a tabindex="-1" href="../amelia/">Personas</a></li>
-                <li><a tabindex="-1" href="../cerulean/">Contacto</a></li>
-                <li><a tabindex="-1" href="../cosmo/">Profesionales</a></li>
-                <li><a tabindex="-1" href="../cyborg/">Paciente</a></li>
+                <li><a tabindex="-1" href="../personas/">Personas</a></li>
+                <li><a tabindex="-1" href="../contactos/">Contacto</a></li>
+                <li><a tabindex="-1" href="../profesionales/">Profesionales</a></li>
+                <li><a tabindex="-1" href="../pacientes/">Paciente</a></li>
               </ul>
             </li>
             <li>
