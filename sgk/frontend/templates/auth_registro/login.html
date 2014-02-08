@@ -2,20 +2,19 @@
 {% load i18n %}
 {% load bootstrap3 %}
 {% block content %}
-<div class="panel panel-default" id="forms">
-    <div class="panel-heading">Inicio de sesión</div>
-    <form method="POST" action=".">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    {% buttons %}
-        <button type="submit" class="btn btn-primary">
-            {% bootstrap_icon "star" %} Iniciar sesión
-        </button>
-    {% endbuttons %}
-    <input type="hidden" name="next" value="{{ next }}" />
-</form>
-</div>
-
-<p>¿Olvido su clave? ¡<a href="{% url "auth_password_reset" %}">Restablecer contraseña</a>!</p>
+    <div class="panel panel-default col-lg-6 col-lg-offset-3" id="forms">
+        <div class="panel-heading">Inicio de sesión</div>
+        <form method="POST" action=".">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <p>¿Olvido su clave? ¡<a href="{% url "auth_password_reset" %}">Restablecer contraseña</a>!</p>
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">
+                    {% bootstrap_icon "star" %} Iniciar sesión
+                </button>
+            {% endbuttons %}
+            <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+    </div>
 {% endblock %}
 
