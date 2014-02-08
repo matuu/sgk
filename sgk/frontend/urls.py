@@ -7,6 +7,7 @@ from utils_sgk.forms import HtmlEmailPasswordResetForm
 urlpatterns = patterns('frontend.views',
     url(r'^$', 'index', name='index'),
     url(r'^turnos/$', 'turno_list', name='turno_list'),
+    url(r'^turnos/nuevo$', 'turno_create', name='turno_create'),
 )
 
 urlpatterns += patterns('django.contrib.auth.views',
