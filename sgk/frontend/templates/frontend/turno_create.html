@@ -1,0 +1,22 @@
+{% extends "frontend/base_simple.html" %}
+{% load bootstrap3 %}
+{% block subtitle %}
+    Nuevo turno
+{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="col-lg-6">
+      <h2>Nuevo turno</h2>
+      <form method="POST" novalidate="">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary">
+          Crear
+        </button>
+        {% endbuttons %}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

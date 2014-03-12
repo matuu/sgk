@@ -140,13 +140,13 @@ class Paciente(BaseModel):
 class Turno(BaseModel):
     """
     """
-    dia = models.DateField(u'Día', auto_now_add=True)
-    hora = models.TimeField(u'Hora', auto_now_add=True)
-    duracion = models.TimeField(u'Duración',
-            help_text=u"Duración en horas de la sesión.")
+    dia = models.DateField(u'Día')
+    hora = models.TimeField(u'Hora')
+    duracion = models.PositiveSmallIntegerField(u'Duración', default=60,
+            help_text=u"Duración en minutos de la sesión.")
     motivo = models.CharField(u'Motivo', max_length=255, blank=True)
     asistio = models.BooleanField(u'¿Asistió?', default=False)
-    aviso = models.BooleanField(u'¿Avisó?')
+    aviso = models.BooleanField(u'¿Avisó?', default=False)
     observaciones = models.TextField(u'Observaciones',  blank=True)
     nombre_paciente = models.CharField(u'Nombre del paciente', max_length=255, blank=True,
             help_text=u'Dejar en blanco si el paciente se encuentra en el sistema.')

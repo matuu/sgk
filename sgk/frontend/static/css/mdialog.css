@@ -6,7 +6,7 @@
     width: 100%;
     height: 100%;
     background: #666;
-    z-index:1001;
+    z-index:2001;
     opacity:.60;
     -moz-opacity: 0.60;
     filter: alpha(opacity=60);
@@ -17,7 +17,7 @@
     position: fixed;
     padding: 16px;
     color: #444;
-    z-index:1002;
+    z-index:2002;
     overflow: auto;
     background-color:#FcFcFc;
     width:30%;
@@ -80,15 +80,21 @@ Valores permitidos: info, warn, shutdown*/
 
 }
   
-  
+#mbYes {
+    background-color: rgba(102, 153, 85, 0.4);
+}
+
+#mbNo {
+    background-color: rgba(153, 102, 85, 0.4);
+}
 #mbYes:hover
 {
-    background-color: #669955;
+    background-color: rgb(102, 153, 85);
     color: #eee;
 }
 #mbNo:hover
 {
-    background-color: #996655;
+    background-color: rgb(153, 102, 85);
     color: #eee;
 }
 .mmodal #mmessage
