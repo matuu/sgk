@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'css/mdialog.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <script type="text/javascript" src="{% static 'js/jquery-2.0.3.min.js' %}" ></script>
-    <script type="text/javascript" src="{% static 'js/mdialog.js' %}" ></script>
-    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}" ></script>
+
     <title>{% block title %}·: Sistema de gestión kinesiológico :·{% endblock %} {% block subtitle %}{% endblock %}</title>
 </head>
 <body>
@@ -24,18 +22,22 @@
   <div id="footer">
     {% block footer %}{% endblock %}
   </div>
-<script type="text/javascript">
-      function closeSession(){
-        mconfirm = new mDialogConfirm({
-            title: '¿Cerrar sesión?',
-            message: "Está a punto de cerrar la sesión. ¿Desea continuar?",
-            yes: function() { window.location = {% url 'auth_logout' %}; },
-            type: 'shutdown'
-        }).show();
-      }
-</script>
-{% block script_js %} {% endblock %}
- <!-- Required for mDialog -->
-<div id="mdialog"></div>
+    <script type="text/javascript" src="{% static 'js/jquery-2.0.3.min.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'js/mdialog.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}" ></script>
+    <script type="text/javascript">
+            function closeSession(){
+                    mconfirm = new mDialogConfirm({
+                    title: '¿Cerrar sesión?',
+                    message: "Está a punto de cerrar la sesión. ¿Desea continuar?",
+                    yes: function() { window.location = {% url 'auth_logout' %}; },
+                    type: 'shutdown'
+                }).show();
+            }
+    </script>
+
+    {% block script_js %} {% endblock %}
+    <!-- Required for mDialog -->
+    <div id="mdialog"></div>
 </body>
 </html>

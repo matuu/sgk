@@ -1,19 +1,22 @@
 {% extends "frontend/base_simple.html" %}
 {% load bootstrap3 %}
 {% block subtitle %}
-    Nuevo turno
+    {% if model.pk %}Editar turno {% else %} Nuevo turno {% endif %}
 {% endblock %}
 {% block content %}
   <div class="row">
     <div class="col-lg-6">
-      <h2>Nuevo turno</h2>
+      <h2>{% if object.pk %}Editar turno {% else %}Nuevo turno{% endif %}</h2>
       <form method="POST" novalidate="">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}
         <button type="submit" class="btn btn-primary">
-          Crear
+          Guardar
         </button>
+        <a href="{% url 'turno_list' %}">
+            <input type="button" class="btn btn.primary" value="Volver" />
+        </a>
         {% endbuttons %}
       </form>
     </div>

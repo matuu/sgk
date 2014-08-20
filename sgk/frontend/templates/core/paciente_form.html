@@ -1,0 +1,25 @@
+{% extends "frontend/base_simple.html" %}
+{% load bootstrap3 %}
+{% block subtitle %}
+    {% if model.pk %}Editar paciente {% else %} Nuevo paciente {% endif %}
+{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="col-lg-6">
+      <h2>{% if object.pk %}Editar paciente {% else %}Nuevo paciente{% endif %}</h2>
+      <form method="POST" novalidate="">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary">
+          Guardar
+        </button>
+        <a href="{% url 'paciente_list' %}">
+            <input type="button" class="btn btn.primary" value="Volver" />
+        </a>
+        {% endbuttons %}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

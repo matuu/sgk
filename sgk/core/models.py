@@ -62,11 +62,18 @@ class Persona(BaseModel):
         ('M', u'Masculino'),
         ('O', u'Otro')
     )
+    ESTADO_CIVIL = (
+        ('S', u"soltero"),
+        ('C', u"casado"),
+        ('D', u"divorciado"),
+        ('V', u"viudo"),
+        ('CV', u"Concuvinato")
+    )
     nombre = models.CharField(u'Nombre', max_length=255)
     apellido = models.CharField(u'Apellido', max_length=255)
     fecha_nacimiento = models.DateField(u'Fecha de nacimiento', help_text="DD/MM/AAAA")
     genero = models.CharField(u'Género', max_length=1, choices=GENERO, default=u'F')
-    estado_civil = models.CharField(u'Estado civíl', max_length=255, default=u'soltero')
+    estado_civil = models.CharField(u'Estado civíl', max_length=3, choices=ESTADO_CIVIL, default='S')
     dni = models.IntegerField(u'DNI')
     domicilio = models.CharField(u'Domicilio', max_length=255, blank=True)
     observaciones = models.TextField(u'Observaciones', blank=True)
@@ -114,6 +121,13 @@ class ObraSocial(BaseModel):
     email = models.EmailField(u'E-mail', blank=True)
     contacto = models.ForeignKey(Contacto, verbose_name=u'Contacto', null=True, related_name='obrasocial')
 
+    def __unicode__(self):
+        return u"{}".format(self.nombre)
+
+    class Meta:
+        verbose_name = u"obra social"
+        verbose_name_plural = u"obras sociales"
+
 
 class Paciente(BaseModel):
     """
@@ -158,8 +172,10 @@ class Turno(BaseModel):
         nombre = u''
         if self.nombre_paciente:
             nombre = self.nombre_paciente
+        # elif self.paciente and self.paciente.persona:
+        #     nombre = self.paciente.persona.nombre
         else:
-            nombre = self.paciente.persona.nombre
+            nombre = u"NN"
         return u"{} - {} {} ({})".format(
                 nombre, self.dia, self.hora,
                 self.profesional.persona.nombre)
@@ -175,15 +191,18 @@ class MotivoConsulta(BaseModel):
     el paciente debe tomar algunas sesiones.
 
     """
+    motivo_consulta_paciente = models.TextField(
+            u'Motivo según el paciente', blank=True, default=u"",
+            help_text=u"Signos y síntomas explicados por el paciente.")
     diagnostico_medico = models.TextField(u'Diagnóstico médico',
-            help_text=u'Diagnóstico que elaboró el médico clínico.')
+            help_text=u'Diagnóstico que elaboró el médico especialista.')
     evaluacion_kinesica = models.TextField(u'Evaluación Kinésica',
             help_text=u'Evaluación elaborada por el kinesiólogo/a.')
     fecha_ingreso = models.DateField(u'Fecha de ingreso', auto_now_add=True)
     cantidad_sesiones = models.IntegerField(u'Cantidad de sesiones',
             help_text=u'Cantidad de sesiones necesarias recetadas por el médico.')
     tratamientos_previos = models.TextField(u'Tratamientos previos',
-            help_text=u'Descripción de tratamientos previos'
+            help_text=u'Descripción de tratamientos previos '
                       u'por el mismo motivo de consulta')
     fecha_alta = models.DateField(u'Fecha de alta', null=True,
             help_text=u'Fecha de alta tentativa.')
