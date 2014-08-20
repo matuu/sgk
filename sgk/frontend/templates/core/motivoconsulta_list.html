@@ -1,0 +1,40 @@
+{% extends "frontend/base_simple.html" %}
+{% load bootstrap3 %}
+{% block subtitle %}
+    Inicio
+{% endblock %}
+{% block content %}
+{% buttons %}
+<a href="{% url 'motivo_consulta_create' %}" />
+<button type="button" class="btn btn-primary">
+  {% bootstrap_icon "plus" %} Añadir un motivo de consulta
+</button>
+</a>
+{% endbuttons %}
+    <table class="table table-condensed table-striped">
+        <thead>
+            <tr>
+                <th>Fecha Ingreso</th>
+                <th>Fecha de alta</th>
+                <th>Cantidad de sesiones</th>
+                <th>Diagnóstico Médico</th>
+                <th>Evaluación Kinésica</th>
+                <th>Tratamientos previos</th>
+                <th>Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in object_list %}
+                <tr>
+                    <td><a href="{% url 'motivo_consulta_update' t.pk %}">{{ t.fecha_ingreso }}</a></td>
+                    <td>{{ t.fecha_alta }}</td>
+                    <td>{{ t.cantidad_sesiones }}</td>
+                    <td>{{ t.diagnostico_medico }}</td>
+                    <td>{{ t.evaluacion_kinesica }}</td>
+                    <td>{{ t.tratamientos_previos }}</td>
+                    <td>{{ t.observaciones }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

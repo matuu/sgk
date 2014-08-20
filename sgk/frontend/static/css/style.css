@@ -1,32 +1,63 @@
 /** { padding: 0px; margin: 0px;}
 */
 body{
-    background-color: #efefff;
+    background: #f3f3f3 url(../img/db5.png);
+    font-family: "ubunturegular";
+    font-size: 18px;
 }
 
-fieldset {
-    border: 0px;
-    background-color: #f4f4ff;
+h1, h2, h3, h4, h5, h6 {
+    font-family: "architects_daughterregular";
+    color: #209e92;
+}
+h1 {
+    font-size: 300%;
+    font-weight: 600;
+    font-family: "architects_daughterregular";
+}
+@font-face {
+    font-family: 'architects_daughterregular';
+    src: url('../fonts/architectsdaughter-webfont.eot');
+    src: url('../fonts/architectsdaughter-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/architectsdaughter-webfont.woff') format('woff'),
+         url('../fonts/architectsdaughter-webfont.ttf') format('truetype'),
+         url('../fonts/architectsdaughter-webfont.svg#architects_daughterregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
+@font-face {
+    font-family: 'patrick_handregular';
+    src: url('../fonts/patrickhand-regular-webfont.eot');
+    src: url('../fonts/patrickhand-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/patrickhand-regular-webfont.woff') format('woff'),
+         url('../fonts/patrickhand-regular-webfont.ttf') format('truetype'),
+         url('../fonts/patrickhand-regular-webfont.svg#patrick_handregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 
-.report td { padding: 5px 10px; background-color: #e5e5ff; }
-.report th{ padding: 2px 10px; background-color: #d5d5ff; color: #222; }
-
-table.styled-table {
-    border-collapse: collapse;
 }
-table.styled-table th, table.styled-table td {
-    border: 1px solid #000;
-    padding: 5px;
+
+@font-face {
+    font-family: 'ubuntubold';
+    src: url('../fonts/ubuntu-bold-webfont.eot');
+    src: url('../fonts/ubuntu-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ubuntu-bold-webfont.woff') format('woff'),
+         url('../fonts/ubuntu-bold-webfont.ttf') format('truetype'),
+         url('../fonts/ubuntu-bold-webfont.svg#ubuntubold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
 }
 
-.audio-row {white-space: nowrap;}
+@font-face {
+    font-family: 'ubunturegular';
+    src: url('../fonts/ubuntu-regular-webfont.eot');
+    src: url('../fonts/ubuntu-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ubuntu-regular-webfont.woff') format('woff'),
+         url('../fonts/ubuntu-regular-webfont.ttf') format('truetype'),
+         url('../fonts/ubuntu-regular-webfont.svg#ubunturegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 
-.label-field { font-weight: 600; } }
-
-.table-label-field p span { font-weight: 600; }
-
-.warn-color-text { color: #AA0000; }
-
-.centered { float: none; margin-left: auto; margin-right: auto; } }
+}

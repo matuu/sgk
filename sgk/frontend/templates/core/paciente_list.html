@@ -1,0 +1,39 @@
+{% extends "frontend/base_simple.html" %}
+{% load bootstrap3 %}
+{% block subtitle %}
+    Inicio
+{% endblock %}
+{% block content %}
+{% buttons %}
+<a href="{% url 'paciente_create' %}" />
+<button type="button" class="btn btn-primary">
+  {% bootstrap_icon "plus" %} Añadir paciente
+</button>
+</a>
+{% endbuttons %}
+    <table class="table table-condensed table-striped">
+        <thead>
+            <tr>
+                <th>Persona</th>
+                <th>Peso</th>
+                <th>Altura</th>
+                <th>Fecha de ingreso</th>
+                <th>Obra social</th>
+                <th>Observaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in object_list %}
+                <tr>
+                    <td><a href="{% url 'paciente_update' t.pk %}">{{ t.persona }}</a></td>
+                    <td>{{ t.peso }}</td>
+                    <td>{{ t.altura }}</td>
+                    <td>{{ t.fecha_ingreso }}</td>
+                    <td>{{ t.obra_social }}</td>
+                    <td>{{ t.observaciones }}</td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
