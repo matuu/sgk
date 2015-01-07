@@ -1,19 +1,23 @@
-{% extends "frontend/base_simple.html" %}
-{% load bootstrap3 %}
+{% extends "frontend/base.html" %}
+{% load bootstrap3 static frontend_tags %}
 {% block subtitle %}
     Inicio
 {% endblock %}
 {% block content %}
+    <h2>Listado de pacientes
+        <a href="{% url 'paciente_create' %}" class="pull-right"/>
+        <button type="button" class="btn btn-primary">
+          {% bootstrap_icon "plus" %} Añadir paciente
+        </button>
+        </a>
+    </h2>
 {% buttons %}
-<a href="{% url 'paciente_create' %}" />
-<button type="button" class="btn btn-primary">
-  {% bootstrap_icon "plus" %} Añadir paciente
-</button>
-</a>
+
 {% endbuttons %}
     <table class="table table-condensed table-striped">
         <thead>
             <tr>
+                <th></th>
                 <th>Persona</th>
                 <th>Peso</th>
                 <th>Altura</th>
@@ -25,11 +29,13 @@
         <tbody>
             {% for t in object_list %}
                 <tr>
-                    <td><a href="{% url 'paciente_update' t.pk %}">{{ t.persona }}</a></td>
+                    <td class="img-thumb-table">{{ t|profile_image:'img-rounded'}}
+                    </td>
+                    <td><a href="{% url 'ficha_kinesica' t.pk %}">{{ t.persona }}</a></td>
                     <td>{{ t.peso }}</td>
                     <td>{{ t.altura }}</td>
                     <td>{{ t.fecha_ingreso }}</td>
-                    <td>{{ t.obra_social }}</td>
+                    <td>{% if t.obra_social %} {{ t.obra_social }} {% else %}No especificada{% endif %}</td>
                     <td>{{ t.observaciones }}</td>
 
                 </tr>

@@ -2,6 +2,7 @@
 from django.conf.urls import patterns, include, url
 from django.core.urlresolvers import reverse_lazy
 
+
 from utils_sgk.forms import HtmlEmailPasswordResetForm
 
 urlpatterns = patterns('frontend.views',
@@ -13,17 +14,7 @@ urlpatterns = patterns('frontend.views',
     url(r'^pacientes/nuevo$', 'paciente_create', name='paciente_create'),
     url(r'^pacientes/editar/(?P<pk>\d+)/$', 'paciente_update', name="paciente_update"),
     url(r'^personas/$', 'persona_list', name='persona_list'),
-    url(r'^personas/nuevo$', 'persona_create', name='persona_create'),
-    url(r'^personas/editar/(?P<pk>\d+)/$', 'persona_update', name="persona_update"),
-    url(r'^motivodeconsulta/$', 'motivo_consulta_list', name='motivo_consulta_list'),
-    url(r'^motivodeconsulta/nuevo$', 'motivo_consulta_create', name='motivo_consulta_create'),
-    url(r'^motivodeconsulta/editar/(?P<pk>\d+)/$', 'motivo_consulta_update', name="motivo_consulta_update"),
-    url(r'^objetivo/$', 'objetivo_list', name='objetivo_list'),
-    url(r'^objetivo/nuevo$', 'objetivo_create', name='objetivo_create'),
-    url(r'^objetivo/editar/(?P<pk>\d+)/$', 'objetivo_update', name="objetivo_update"),
-    url(r'^antecedente/$', 'antecedente_list', name='antecedente_list'),
-    url(r'^antecedente/nuevo$', 'antecedente_create', name='antecedente_create'),
-    url(r'^antecedente/editar/(?P<pk>\d+)/$', 'antecedente_update', name="antecedente_update"),
+    url(r'^fichakinesica/(?P<pk>\d+)(?:/(?P<motivo_pk>\d+))?/$', 'ficha_kinesica', name="ficha_kinesica"),
 )
 
 urlpatterns += patterns('django.contrib.auth.views',
@@ -69,4 +60,3 @@ urlpatterns += patterns('django.contrib.auth.views',
         {'template_name': 'auth_registro/password_reset_done.html'},
         name='auth_password_reset_done'),
 )
-

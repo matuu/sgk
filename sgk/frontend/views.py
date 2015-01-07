@@ -2,14 +2,21 @@
 from datetime import datetime, timedelta
 
 from django.contrib import messages
+from django.db.models import ObjectDoesNotExist
+from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 from django.core.urlresolvers import reverse_lazy
+from enhanced_cbv.views.edit import InlineFormSetsView, EnhancedInlineFormSet
+# from tables_filters.edit import InlineFormSetsView, EnhancedInlineFormSet
 
-from core.models import Turno, Paciente, Persona, MotivoConsulta, Objetivo, Antecedente
-from frontend.forms import TurnoForm, PacienteForm, PersonaForm
+from utils_sgk.views import AuthenticatedMixin
+from core.models import (Turno, Paciente, Persona, Profesional, Antecedente,
+                         MotivoConsulta, Objetivo)
+from frontend.forms import (TurnoForm, PacienteForm, PersonaForm,
+                            ContactoForm, AntecedenteForm, MotivoConsultaForm, ObjetivoInlineForm)
 
 
-class Index(TemplateView):
+class Index(AuthenticatedMixin, TemplateView):
     template_name = "frontend/index.html"
 
     def get_context_data(self, **kwargs):
@@ -18,21 +25,35 @@ class Index(TemplateView):
         return context
 
 
-class TurnosListView(ListView):
+class TurnosListView(AuthenticatedMixin, ListView):
     # queryset = Turno.objects.all()
     #template_name = "frontend/turno_list.html"
 
     def get_queryset(self):
         dt = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
-        dt_limit = dt + timedelta(days=7)
+        dt_limit = dt + timedelta(days=14)
         return Turno.objects\
             .filter(dia__gte=dt, dia__lt=dt_limit).order_by('dia', 'hora')
 
 
-class TurnoCreateView(CreateView):
+class TurnoCreateView(AuthenticatedMixin, CreateView):
     model = Turno
     form_class = TurnoForm
     #template_name = 'frontend/turno_form.html'
+
+    # def get_form(self, form_class):
+    #
+    #     form1 = super(TurnoCreateView, self).get_form(form_class)
+    #     # (initial={})
+    #     return form1
+
+    def get_initial(self):
+        try:
+            profesional = Profesional.objects.get(usuario=self.request.user)
+            self.initial.update({'profesional': profesional})
+        except ObjectDoesNotExist:
+            pass
+        return super(TurnoCreateView, self).get_initial()
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS,
@@ -40,7 +61,7 @@ class TurnoCreateView(CreateView):
         return reverse_lazy('turno_list')
 
 
-class TurnoEditView(UpdateView):
+class TurnoEditView(AuthenticatedMixin, UpdateView):
     model = Turno
     form_class = TurnoForm
     template_name = 'frontend/turno_form.html'
@@ -51,17 +72,80 @@ class TurnoEditView(UpdateView):
         return reverse_lazy('turno_list')
 
 
-class PacienteListView(ListView):
+class PacienteListView(AuthenticatedMixin, ListView):
     template_name = "frontend/paciente_list.html"
 
     def get_queryset(self):
         return Paciente.objects.all()
 
 
-class PacienteCreateView(CreateView):
+class PacienteCreateView(AuthenticatedMixin, CreateView):
     model = Paciente
     form_class = PacienteForm
-    #template_name = 'frontend/paciente_form.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        persona_form = PersonaForm()
+        contacto_form = ContactoForm()
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  persona_form=persona_form,
+                                  contacto_form=contacto_form))
+
+    def get_initial(self):
+        hoy = datetime.today()
+        self.initial.update({'fecha_ingreso': hoy})
+        return super(PacienteCreateView, self).get_initial()
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance and its inline
+        formsets with the passed POST variables and then checking them for
+        validity.
+        """
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        persona_form = PersonaForm(self.request.POST, self.request.FILES)
+        contacto_form = ContactoForm(self.request.POST)
+        if form.is_valid() and persona_form.is_valid()\
+                and contacto_form.is_valid():
+            return self.form_valid(form, persona_form, contacto_form)
+        else:
+            return self.form_invalid(form, persona_form, contacto_form)
+
+    def form_valid(self, form, persona_form, contacto_form):
+        persona = persona_form.save(commit=False)
+        contacto = contacto_form.save(commit=False)
+        self.object = form.save(commit=False)
+        contacto.nombre = persona.nombre
+        contacto.apellido = persona.apellido
+        contacto.save()
+        persona.contacto = contacto
+        persona.save()
+        antecedente = Antecedente()
+        antecedente.save()
+        self.object.antecedente =antecedente
+        self.object.persona = persona
+        self.object.save()
+        motivo = MotivoConsulta()
+        motivo.cantidad_sesiones = 10
+        motivo.paciente_id = self.object.pk
+        motivo.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, persona_form, contacto_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  persona_form=persona_form,
+                                  contacto_form=contacto_form))
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS,
@@ -69,120 +153,144 @@ class PacienteCreateView(CreateView):
         return reverse_lazy('paciente_list')
 
 
-class PacienteEditView(UpdateView):
+class PacienteEditView(AuthenticatedMixin, UpdateView):
     model = Paciente
     form_class = PacienteForm
-    #template_name = 'frontend/paciente_form.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        persona_form = PersonaForm(instance=self.object.persona)
+        contacto_form = ContactoForm(instance=self.object.persona.contacto)
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  persona_form=persona_form,
+                                  contacto_form=contacto_form))
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        persona_form = PersonaForm(self.request.POST, self.request.FILES, instance=self.object.persona)
+        contacto_form = ContactoForm(self.request.POST, instance=self.object.persona.contacto)
+        if form.is_valid() and persona_form.is_valid()\
+                and contacto_form.is_valid():
+            return self.form_valid(form, persona_form, contacto_form)
+        else:
+            return self.form_invalid(form, persona_form, contacto_form)
+
+    def form_valid(self, form, persona_form, contacto_form):
+        persona = persona_form.save(commit=False)
+        contacto = contacto_form.save(commit=False)
+        self.object = form.save(commit=False)
+        contacto.nombre = persona.nombre
+        contacto.apellido = persona.apellido
+        contacto.save()
+        persona.contacto = contacto
+        persona.save()
+        self.object.persona = persona
+        self.object.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, persona_form, contacto_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  persona_form=persona_form,
+                                  contacto_form=contacto_form))
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS,
-                u"Paciente actualizado correctamente.")
+                u"Paciente editado correctamente.")
         return reverse_lazy('paciente_list')
 
 
-class PersonaListView(ListView):
+class PersonaListView(AuthenticatedMixin, ListView):
     template_name = "frontend/persona_list.html"
 
     def get_queryset(self):
         return Persona.objects.all()
 
 
-class PersonaCreateView(CreateView):
-    model = Persona
-    form_class = PersonaForm
-
-    def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                u"Persona creada correctamente.")
-        return reverse_lazy('persona_list')
-
-
-class PersonaEditView(UpdateView):
-    model = Persona
-    form_class = PersonaForm
-
-    def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                u"Persona actualizada correctamente.")
-        return reverse_lazy('persona_list')
-
-
-class MotivoConsultaListView(ListView):
-
-    def get_queryset(self):
-        return MotivoConsulta.objects.all()
-
-
-class MotivoConsultaCreateView(CreateView):
-    model = MotivoConsulta
-    #form_class = PersonaForm
-
-    def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                u"Motivo de consulta creado correctamente.")
-        return reverse_lazy('motivo_consulta_list')
-
-
-class MotivoConsultaEditView(UpdateView):
-    model = MotivoConsulta
-    #form_class = PersonaForm
-
-    def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                u"Motivo de Consulta actualizado correctamente.")
-        return reverse_lazy('motivo_consulta_list')
-
-
-class ObjetivoListView(ListView):
-
-    def get_queryset(self):
-        return Objetivo.objects.all()
-
-
-class ObjetivoCreateView(CreateView):
-    model = Objetivo
-    #form_class = PersonaForm
-
-    def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                u"Motivo de consulta creado correctamente.")
-        return reverse_lazy('objetivo_list')
-
-
-class ObjetivoEditView(UpdateView):
-    model = Objetivo
-    #form_class = PersonaForm
-
-    def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                u"Motivo de Consulta actualizado correctamente.")
-        return reverse_lazy('objetivo_list')
-
-
-class AntecedenteListView(ListView):
-
-    def get_queryset(self):
-        return Antecedente.objects.all()
-
-
-class AntecedenteCreateView(CreateView):
+class FichaKinesicaEditView(AuthenticatedMixin, InlineFormSetsView):
+    """
+    El ID dado será del paciente, de debe buscar el antecedente
+    """
+    template_name = "frontend/ficha_kinesica.html"
     model = Antecedente
-    #form_class = PersonaForm
+    form_class = AntecedenteForm
 
-    def get_success_url(self):
+    class ObjetivoInline(EnhancedInlineFormSet):
+        formset_class = ObjetivoInlineForm
+        model = Objetivo
+        extra = 0
+        can_delete = True
+
+    formsets = [ObjetivoInline, ]
+
+    def get_factory_kwargs(self):
+        return {
+            'parent_model': MotivoConsulta
+        }
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        return Paciente.objects.get(pk=pk).antecedente
+
+    def get_motivo_instance(self):
+        if self.kwargs.get('motivo_pk', None):
+            return self.object.paciente.motivos_de_consulta.get(
+                pk=self.kwargs.get('motivo_pk', None))
+        else:
+            return self.object.paciente.motivos_de_consulta.latest('fecha_ingreso')
+
+    def post(self, request, *args, **kwargs):
+        return super(FichaKinesicaEditView, self).post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        motivo_form = self.get_motivo_form()
+        motivo_form.save()
+        return super(FichaKinesicaEditView, self).form_valid(form)
+
+    def get_formsets_kwargs(self, enhanced_formset):
+        kwargs = super(FichaKinesicaEditView, self).get_formsets_kwargs(enhanced_formset)
+        kwargs.update({
+            'instance': self.get_motivo_instance()
+        })
+        return kwargs
+
+    def get_motivo_form(self):
+        if self.request.method == "POST":
+            return MotivoConsultaForm(self.request.POST,
+                                      instance=self.get_motivo_instance())
+        else:
+            return MotivoConsultaForm(instance=self.get_motivo_instance())
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(FichaKinesicaEditView, self).get_context_data(*args, **kwargs)
+        #context["form"] = self.get_form(self.get_form_class())
+        context["paciente"] = self.object.paciente
+        context["motivo_form"] = self.get_motivo_form()
+        context["motivos"] = self.object.paciente.motivos_de_consulta.all()
+        return context
+
+    def get_success_url(self, *args, **kwargs):
         messages.add_message(self.request, messages.SUCCESS,
-                u"Antecedente creado correctamente.")
-        return reverse_lazy('antecedente_list')
-
-
-class AntecedenteEditView(UpdateView):
-    model = Antecedente
-    #form_class = PersonaForm
-
-    def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                u"Antecedente actualizado correctamente.")
-        return reverse_lazy('antecedente_list')
+            u"Ficha editada correctamente.")
+        pk = self.kwargs.get(self.pk_url_kwarg, None)
+        if self.kwargs.get('motivo_pk', None):
+            motivo_pk = self.kwargs.get('motivo_pk', None)
+            return reverse_lazy('ficha_kinesica',
+                                kwargs={'pk': pk,
+                                        'motivo_pk': motivo_pk})
+        else:
+            return reverse_lazy('ficha_kinesica',
+                                kwargs={'pk': pk})
 
 
 index = Index.as_view()
@@ -193,14 +301,4 @@ paciente_list = PacienteListView.as_view()
 paciente_create = PacienteCreateView.as_view()
 paciente_update = PacienteEditView.as_view()
 persona_list = PersonaListView.as_view()
-persona_create = PersonaCreateView.as_view()
-persona_update = PersonaEditView.as_view()
-motivo_consulta_list = MotivoConsultaListView.as_view()
-motivo_consulta_create = MotivoConsultaCreateView.as_view()
-motivo_consulta_update = MotivoConsultaEditView.as_view()
-objetivo_list = ObjetivoListView.as_view()
-objetivo_create = ObjetivoCreateView.as_view()
-objetivo_update = ObjetivoEditView.as_view()
-antecedente_list = AntecedenteListView.as_view()
-antecedente_create = AntecedenteCreateView.as_view()
-antecedente_update = AntecedenteEditView.as_view()
+ficha_kinesica = FichaKinesicaEditView.as_view()

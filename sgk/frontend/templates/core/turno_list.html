@@ -1,16 +1,18 @@
-{% extends "frontend/base_simple.html" %}
+{% extends "frontend/base.html" %}
 {% load bootstrap3 %}
 {% block subtitle %}
     Inicio
 {% endblock %}
 {% block content %}
+    <h2>Listado de turnos
 {% buttons %}
 <a href="{% url 'turno_create' %}" />
-<button type="button" class="btn btn-primary">
+<button type="button" class="btn btn-primary pull-right">
   {% bootstrap_icon "plus" %} Nuevo turno
 </button>
 </a>
 {% endbuttons %}
+    </h2>
     <table class="table table-condensed table-striped">
         <thead>
             <tr>
@@ -30,7 +32,12 @@
                 <tr>
                     <td>{{ t.dia }}</td>
                     <td>{{ t.hora }}</td>
-                    <td>{{ t.paciente }}</td>
+                    <td>{% if not t.paciente %}
+                            {{ t.nombre_paciente }}
+                        {% else %}
+                            {{ t.paciente }}
+                        {% endif %}
+                    </td>
                     <td>{{ t.profesional }}</td>
                     <td>{{ t.duracion }}</td>
                     <td>{{ t.motivo }}</td>

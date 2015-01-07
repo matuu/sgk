@@ -1,9 +1,21 @@
 /** { padding: 0px; margin: 0px;}
 */
+
+html {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
 body{
-    background: #f3f3f3 url(../img/db5.png);
+    background: #ffffff url(../img/bg.png);
     font-family: "ubunturegular";
-    font-size: 18px;
+    /*font-size: 18px;*/
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    padding: 52px 0 0;
+    margin-bottom: -60px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -60,4 +72,166 @@ h1 {
     font-weight: normal;
     font-style: normal;
 
+}
+/*navbar*/
+.navbar {
+    border-radius: 0px;
+    margin-bottom: 0px;
+}
+
+.nabvar-fix-top {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 52px;
+    font-size: 13px;
+    z-index: 1000;
+}
+
+.navbar-toggle {
+    padding: 5px 14px;
+    background-color: #333;
+}
+
+.navbar-toggle span {
+    color: #eee;
+}
+
+/*end navbar*/
+.back1 {
+    background-image: url("../img/intro1.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.back2 {
+    background-image: url("../img/intro2.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.back3 {
+    background-image: url("../img/intro3.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.intro {
+    height: 100%;
+    padding: 0;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-top: 4%;
+ }
+.intro .row {
+    background-color: rgba(55,55,55,0.6);
+}
+
+.intro .no-bg {
+    background-color:transparent;
+}
+
+.intro h1 {
+    font-size: 450%;
+    font-weight: 400;
+    font-family: "architects_daughterregular";
+    color: #fff;
+}
+
+.intro p {
+    color: #fff;
+}
+
+.intro a.recovery {
+    float: right;
+}
+
+.intro label {
+    color: #fff;
+}
+
+/* LOGIN */
+.user-form {
+    margin: 20px auto;
+    width: 50%;
+    max-width: 350px;
+    min-width: 120px;
+}
+
+.user-form button {
+    width: 100%;
+}
+
+.user-form .label {
+    line-height: inherit;
+}
+
+/* Override bootstrap */
+textarea.form-control {
+  height: 110px;
+}
+
+/* Main classes */
+
+.full-width {
+    /*padding-top: 20px;*/
+}
+
+.img-thumb-table {
+    text-align: center;
+}
+.img-thumb-table img {
+    height: 40px;
+}
+
+/* --------- COLLAPSIBLE PANELS ----------*/
+
+.expandable-panel {
+    width:100%;
+    position:relative;
+    min-height:40px;
+    overflow:auto;
+    margin-bottom: 20px;
+    /*border:1px solid #999;*/
+}
+.expandable-panel-heading {
+    width:100%;
+    cursor:pointer;
+    min-height:40px;
+    clear:both;
+    /*background-color:#E5E5E5;*/
+    position:relative;
+}
+.expandable-panel-heading:hover {
+    color:#666;
+}
+
+.expandable-panel-content {
+    padding:0 15px 0 15px;
+    margin-top:-999px;
+}
+.expandable-panel-content p {
+    padding:4px 0 6px 0;
+}
+.expandable-panel-content p:first-child  {
+    padding-top:10px;
+}
+.expandable-panel-content p:last-child {
+    padding-bottom:15px;
+}
+.icon-close-open {
+    width:20px;
+    height:20px;
+    position:absolute;
+    background-image:url(../img/icon-close-open.png);
+    right:15px;
+}
+.expandable-panel-content img {
+    float:right;
+    padding-left:12px;
+}
+.header-active {
+    background-color:#D0D7F3;
 }

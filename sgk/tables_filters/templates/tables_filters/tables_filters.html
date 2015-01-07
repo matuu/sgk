@@ -1,0 +1,62 @@
+{% load render_table from django_tables2 %}
+{% load humanize %}
+{% block table_rendered %}
+<form method="get" name="selectionCustom" id="selectionCustom" class="filter">
+    <h4 id="filter-title-toggle" class="collapsed">Filtros</h4>
+    <p class="alert alert-success collapse-filter-info"></p>
+    <div class="filter-frame">
+        {% for field in filter.form.visible_fields %}
+            <div class="filter-field">
+                <div class="collapse-field-info">
+                    {% if field.help_text %}
+                        {{ field.help_text }}
+                    {%  else %}
+                        {{ field.label }}
+                    {% endif  %}
+                </div>
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+            </div>
+        {% endfor %}
+        <div class="filter-button">
+            <input type="submit" value="Aplicar"/>
+            <input type="button" id="id_clearfilter" value="Limpiar" />
+        </div>
+    </div>
+</form>
+<form method="post" name="actionForms" id="actionForms"/>
+    {% csrf_token %}
+    <div class="multi-actions">
+        <label for="action">Acciones:</label>
+            <select name="action" class="form-control selectpicker">
+                <option value="-1" selected>----------------</option>
+                {% for action, attrs in actions %}
+                    <option value="{{ forloop.counter }}"> {{ action }}</option>
+                {% endfor %}
+            </select>
+        <input type="button" msg="Se aplicará la acción a todos los ítems seleccionados." form_name="actionForms" value="Ejecutar" confirmFormAction />
+        {% if filter_qs.paginator.num_pages > 1 %}
+            <input type="checkbox" name="all" id="select-all-rows"/>
+            <label for="select-all-rows">Seleccionar todos ({{ filter_qs.paginator.count|intcomma }})</label>
+        {% endif %}
+        {% if can_add_new %}
+            <a class="add-entity-action button" href="{% url 'frontend:'|add:model_prefix|add:'_create' request.user.company.identifier %}" >Agregar
+                {% if filter_qs.data.data.model.short_verbose_name %}
+                    {{ filter_qs.data.data.model.short_verbose_name }}
+                {% else %}
+                    {{ filter_qs.data.verbose_name }}
+                {% endif %}
+            </a>
+        {% endif %}
+    </div>
+    {# Render table filtered #}
+    {% if filter.count != 0 %}
+        {% render_table filter_qs "tables_filters/custom_tables.html" %}
+    {% else %}
+        <p class="alert alert-danger">
+        No se hallaron resultados para los criterios de búsqueda utilizados.
+        </p>
+
+    {% endif %}
+</form>
+{%endblock %}
