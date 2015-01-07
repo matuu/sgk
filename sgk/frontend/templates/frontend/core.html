@@ -6,26 +6,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/pastel-stream.css' %}" />
+{#    <link rel="stylesheet" href="{% static 'css/datepicker3.css' %}" />#}
+    <link rel="stylesheet" href="{% static 'css/chosen.css' %}" />
     <link rel="stylesheet" href="{% static 'css/mdialog.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-
-    <title>{% block title %}·: Sistema de gestión kinesiológico :·{% endblock %} {% block subtitle %}{% endblock %}</title>
+    <script type="text/javascript" src="{% static 'js/jquery-2.0.3.min.js' %}" ></script>
+    {{ form.media }}
+    <title>{% block title %}Sistema de gestión kinesiológico{% endblock %} {% block subtitle %}{% endblock %}</title>
 </head>
 <body>
 
   {% block nav %}{% endblock %}
   {% bootstrap_messages %}
-    <div class="container">
-      {% block content %}{% endblock %}
-    </div>
+
+  {% block main_content %}{% endblock %}
+
   
   <div id="footer">
     {% block footer %}{% endblock %}
   </div>
-    <script type="text/javascript" src="{% static 'js/jquery-2.0.3.min.js' %}" ></script>
     <script type="text/javascript" src="{% static 'js/mdialog.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'js/chosen.jquery.min.js' %}" ></script>
     <script type="text/javascript" src="{% static 'js/bootstrap.js' %}" ></script>
+   <script type="text/javascript" src="{% static 'js/jquery.formset.js' %}" ></script>
     <script type="text/javascript">
+        (function($) {
             function closeSession(){
                     mconfirm = new mDialogConfirm({
                     title: '¿Cerrar sesión?',
@@ -34,6 +40,13 @@
                     type: 'shutdown'
                 }).show();
             }
+            $(document).ready(function(){
+                $("select").chosen({
+                    width: '100%'
+                });
+            });
+        })(jQuery);
+
     </script>
 
     {% block script_js %} {% endblock %}

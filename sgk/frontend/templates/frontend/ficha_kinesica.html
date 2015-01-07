@@ -1,0 +1,172 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap3 static frontend_tags %}
+{% block subtitle %}
+    Ficha Kinésica
+{% endblock %}
+{% block content %}
+    <form action="." method="post" novalidate="">
+        {% csrf_token %}
+        <h2>Ficha kinésica de {{ paciente.persona }}</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Datos de la persona</div>
+                        <div class="panel-body">
+                            <div style="width:100%">
+                                {{ paciente|profile_image:"thumbnail img-circle-i" }}
+                            </div>
+                            <div>
+                                <a href="{% url 'paciente_update' paciente.pk %}">
+                                    <span class="label label-info">Editar perfil</span>
+                                </a>
+                            </div>
+                            <div>Nombre: <strong>{{ paciente.persona }}</strong></div>
+                            <div>Peso: <strong>{{ paciente.peso }} Kg</strong></div>
+                            <div>Altura: <strong>{{ paciente.altura }} Mts</strong></div>
+                            <div>Fecha de ingreso: <strong>{{ paciente.fecha_ingreso }}</strong></div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Motivos de consulta</div>
+                        <div class="panel-body">
+                            {% for item in motivos %}
+                                <a href="{% url 'ficha_kinesica' paciente.pk item.pk %}">
+                                    <span class="label label-default">{{ item }}</span>
+                                </a><br />
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary col-md-6">Guardar</button>
+                        <a href="{% url 'paciente_list' %}">
+                            <input type="button" class="btn col-md-6" value="Volver" />
+                        </a>
+                    {% endbuttons %}
+                </div>
+
+                <div class="col-md-9">
+                    {{ motivo_form.media }}
+                    <div class="panel panel-info expandable-panel" id="cp-1">
+                        <div class="panel-heading expandable-panel-heading">
+                            <span>Motivo de consulta</span>
+                            <span class="icon-close-open"></span>
+                        </div>
+                        <div class="panel-body expandable-panel-content">
+                            {% bootstrap_field motivo_form.motivo_consulta_paciente %}
+                            {% bootstrap_field motivo_form.diagnostico_medico %}
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    {% bootstrap_field motivo_form.cantidad_sesiones %}
+                                </div>
+                                <div class="col-md-6">
+                                     {% bootstrap_field motivo_form.fecha_alta %}
+                                </div>
+                            </div>
+                            {% bootstrap_field motivo_form.tratamientos_previos %}
+                            <div class="panel panel-success">
+                                <div class="panel-heading">Objetivos</div>
+                                <div class="panel-body">
+                                    <div id="more_objetivo">
+                                        {{ formsets.0.management_form }}
+                                        {% for form_inline in formsets.0.forms %}
+                                            <div class="inline_formset panel panel-success {% if form_inline.instance.pk %}is_origin{% endif %}">
+                                                <div class="panel-body">
+                                                    {% bootstrap_field form_inline.descripcion %}
+                                                    {% bootstrap_field form_inline.fecha_inicio %}
+                                                    {% bootstrap_field form_inline.fecha_cumplido %}
+                                                    {% bootstrap_field form_inline.observaciones %}
+                                                    {% bootstrap_field form_inline.motivo_consulta %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <!-- This button will add a new form when clicked -->
+                                        <input type="button" value="Añadir un nuevo objetivo" id="addNewButton" class="btn btn-success" />
+                                    </div>
+                                </div>
+                            </div>
+                            {% bootstrap_field motivo_form.observaciones %}
+                            <div id="empty_form" style="display:none">
+                                <div class="inline_formset">
+                                    {% bootstrap_form formsets.0.empty_form %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default expandable-panel" id="cp-2">
+                        <div class="panel-heading expandable-panel-heading"><span>Antecedentes</span><span
+                                class="icon-close-open"></span></div>
+                        <div class="panel-body expandable-panel-content">
+                            {% bootstrap_field form.patologicos %}
+                            {% bootstrap_field form.quirurgicos %}
+                            {% bootstrap_field form.traumaticos %}
+                            {% bootstrap_field form.heredo_familiar %}
+                            <div class="panel panel-info">
+                                <div class="panel-heading">Sólo en caso de género femenino</div>
+                                <div class="panel-body">
+                                    {% bootstrap_field form.menarca %}
+                                    {% bootstrap_field form.fum %}
+                                    {% bootstrap_field form.tipo_partos %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default expandable-panel" id="cp-3">
+                        <div class="panel-heading expandable-panel-heading"><span>Hábitos</span><span
+                                class="icon-close-open"></span></div>
+                        <div class="panel-body expandable-panel-content">
+                            {% bootstrap_field form.habitos_fisiologicos %}
+                            {% bootstrap_field form.habitos_patologicos %}
+                        </div>
+                    </div>
+                    <div class="panel panel-default expandable-panel" id="cp-4">
+                        <div class="panel-heading expandable-panel-heading"><span>Medicación</span><span
+                                class="icon-close-open"></span></div>
+                        <div class="panel-body expandable-panel-content">
+                            {% bootstrap_field form.medicaciones %}
+                        </div>
+                    </div>
+                    <div class="panel panel-default expandable-panel" id="cp-5">
+                        <div class="panel-heading expandable-panel-heading">
+                            <span>Estudios complementarios</span><span class="icon-close-open"></span></div>
+                        <div class="panel-body  expandable-panel-content">
+                            {% bootstrap_field form.estudios_complementarios %}
+                        </div>
+                    </div>
+                    <div class="panel panel-default expandable-panel" id="cp-6">
+                        <div class="panel-heading expandable-panel-heading">
+                            <span>Evaluación Kinésica</span><span class="icon-close-open"></span></div>
+                        <div class="panel-body expandable-panel-content">
+                            {% bootstrap_field motivo_form.evaluacion_kinesica %}
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-body">
+                            {% bootstrap_field form.observaciones %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block script_js %}
+    <script type="text/javascript" src="{% static 'js/panel_expansible.js' %}" ></script>
+    <script type="text/javascript">
+        (function($){
+            $(document).ready(function(){
+                $({% if formsets.0.forms %}'#more_objetivo div.inline_formset'
+                {% else %}'#empty_form'{% endif %}).formset({
+                    deleteText: 'Eliminar',
+                    prefix: '{{ formsets.0.prefix }}',
+                    addButton: '#addNewButton',
+                    formTemplate: '#empty_form',
+                    isDjangoFormEmpty: true,
+                    replaceDeleteByLink: false
+                });
+            });
+        })(jQuery);
+
+    </script>
+
+{% endblock %}

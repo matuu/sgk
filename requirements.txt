@@ -1,5 +1,6 @@
 ### base ###
 django<1.6
+pillow
 
 ### helpers ###
 south
@@ -10,3 +11,4 @@ django-tables2
 django-bootstrap3
 django-admin-bootstrapped
 pynliner
+-e git://github.com/matuu/django-enhanced-cbv.git#egg=django-enhanced-cbv

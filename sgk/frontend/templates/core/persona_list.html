@@ -1,19 +1,13 @@
-{% extends "frontend/base_simple.html" %}
-{% load bootstrap3 %}
+{% extends "frontend/base.html" %}
+{% load bootstrap3 static %}
 {% block subtitle %}
     Inicio
 {% endblock %}
 {% block content %}
-{% buttons %}
-<a href="{% url 'persona_create' %}" />
-<button type="button" class="btn btn-primary">
-  {% bootstrap_icon "plus" %} Añadir Persona
-</button>
-</a>
-{% endbuttons %}
     <table class="table table-condensed table-striped">
         <thead>
             <tr>
+                <th></th>
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Fecha de Nacimiento</th>
@@ -28,16 +22,19 @@
         <tbody>
             {% for t in object_list %}
                 <tr>
+                    <td>{% if t.imagen_perfil %}
+                            <img src="{% static t.imagen_perfil.url %}" height="40" />
+                        {% endif %}
+                    </td>
                     <td>{{ t.nombre }}</td>
                     <td>{{ t.apellido}}</td>
                     <td>{{ t.fecha_nacimiento }}</td>
                     <td>{{ t.get_genero_display }}</td>
-                    <td>{{ t.estado_civil }}</td>
+                    <td>{{ t.get_estado_civil_display }}</td>
                     <td>{{ t.dni }}</td>
                     <td>{{ t.domicilio }}</td>
-                    <td>{{ t.profesion }}</td>
+                    <td>{% if t.profesion %} {{ t.profesion }} {% else %}No especificada{% endif %}</td>
                     <td>{{ t.observaciones }}</td>
-                    <td><a href="{% url 'persona_update' t.pk %}">Editar</a></td>
                 </tr>
             {% endfor %}
         </tbody>

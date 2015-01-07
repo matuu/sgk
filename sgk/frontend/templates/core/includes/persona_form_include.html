@@ -1,5 +1,5 @@
 {% load bootstrap3 %}
-<form method="POST" novalidate="">
+<form method="POST" novalidate="" enctype="multipart/form-data">
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}
