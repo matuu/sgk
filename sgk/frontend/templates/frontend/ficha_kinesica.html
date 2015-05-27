@@ -47,12 +47,17 @@
 
                 <div class="col-md-9">
                     {{ motivo_form.media }}
-                    <div class="panel panel-info expandable-panel" id="cp-1">
-                        <div class="panel-heading expandable-panel-heading">
-                            <span>Motivo de consulta</span>
-                            <span class="icon-close-open"></span>
-                        </div>
-                        <div class="panel-body expandable-panel-content">
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li class="active"><a href="#motivo" data-toggle="tab">Motivo de consulta</a></li>
+                        <li><a href="#antecedentes" data-toggle="tab">Antecedentes</a></li>
+                        <li><a href="#habitos" data-toggle="tab">Hábitos</a></li>
+                        <li><a href="#medicacion" data-toggle="tab">Medicación</a></li>
+                        <li><a href="#complementarios" data-toggle="tab">Estudios complementarios</a></li>
+                        <li><a href="#evaluacion" data-toggle="tab">Evaluación Kinésica</a></li>
+                        <li><a href="#observaciones" data-toggle="tab">Observaciones</a></li>
+                    </ul>
+                    <div id="my-tab-content" class="tab-content">
+                        <div class="tab-pane active" id="motivo">
                             {% bootstrap_field motivo_form.motivo_consulta_paciente %}
                             {% bootstrap_field motivo_form.diagnostico_medico %}
                             <div class="col-md-12">
@@ -60,7 +65,7 @@
                                     {% bootstrap_field motivo_form.cantidad_sesiones %}
                                 </div>
                                 <div class="col-md-6">
-                                     {% bootstrap_field motivo_form.fecha_alta %}
+                                    {% bootstrap_field motivo_form.fecha_alta %}
                                 </div>
                             </div>
                             {% bootstrap_field motivo_form.tratamientos_previos %}
@@ -73,8 +78,12 @@
                                             <div class="inline_formset panel panel-success {% if form_inline.instance.pk %}is_origin{% endif %}">
                                                 <div class="panel-body">
                                                     {% bootstrap_field form_inline.descripcion %}
+                                                    <div class="col-md-6">
                                                     {% bootstrap_field form_inline.fecha_inicio %}
+                                                    </div>
+                                                    <div class="col-md-6">
                                                     {% bootstrap_field form_inline.fecha_cumplido %}
+                                                    </div>
                                                     {% bootstrap_field form_inline.observaciones %}
                                                     {% bootstrap_field form_inline.motivo_consulta %}
                                                 </div>
@@ -85,18 +94,23 @@
                                     </div>
                                 </div>
                             </div>
-                            {% bootstrap_field motivo_form.observaciones %}
                             <div id="empty_form" style="display:none">
-                                <div class="inline_formset">
-                                    {% bootstrap_form formsets.0.empty_form %}
+                                <div class="inline_formset panel panel-success">
+                                    <div class="panel-body">
+                                        {% bootstrap_field formsets.0.empty_form.descripcion %}
+                                        <div class="col-md-6">
+                                        {% bootstrap_field formsets.0.empty_form.fecha_inicio %}
+                                        </div>
+                                        <div class="col-md-6">
+                                        {% bootstrap_field formsets.0.empty_form.fecha_cumplido %}
+                                        </div>
+                                        {% bootstrap_field formsets.0.empty_form.observaciones %}
+                                        {% bootstrap_field formsets.0.empty_form.motivo_consulta %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="panel panel-default expandable-panel" id="cp-2">
-                        <div class="panel-heading expandable-panel-heading"><span>Antecedentes</span><span
-                                class="icon-close-open"></span></div>
-                        <div class="panel-body expandable-panel-content">
+                        <div class="tab-pane" id="antecedentes">
                             {% bootstrap_field form.patologicos %}
                             {% bootstrap_field form.quirurgicos %}
                             {% bootstrap_field form.traumaticos %}
@@ -110,40 +124,22 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="panel panel-default expandable-panel" id="cp-3">
-                        <div class="panel-heading expandable-panel-heading"><span>Hábitos</span><span
-                                class="icon-close-open"></span></div>
-                        <div class="panel-body expandable-panel-content">
+                        <div class="tab-pane" id="habitos">
                             {% bootstrap_field form.habitos_fisiologicos %}
                             {% bootstrap_field form.habitos_patologicos %}
                         </div>
-                    </div>
-                    <div class="panel panel-default expandable-panel" id="cp-4">
-                        <div class="panel-heading expandable-panel-heading"><span>Medicación</span><span
-                                class="icon-close-open"></span></div>
-                        <div class="panel-body expandable-panel-content">
+                        <div class="tab-pane" id="medicacion">
                             {% bootstrap_field form.medicaciones %}
                         </div>
-                    </div>
-                    <div class="panel panel-default expandable-panel" id="cp-5">
-                        <div class="panel-heading expandable-panel-heading">
-                            <span>Estudios complementarios</span><span class="icon-close-open"></span></div>
-                        <div class="panel-body  expandable-panel-content">
+                        <div class="tab-pane" id="complementarios">
                             {% bootstrap_field form.estudios_complementarios %}
                         </div>
-                    </div>
-                    <div class="panel panel-default expandable-panel" id="cp-6">
-                        <div class="panel-heading expandable-panel-heading">
-                            <span>Evaluación Kinésica</span><span class="icon-close-open"></span></div>
-                        <div class="panel-body expandable-panel-content">
+                        <div class="tab-pane" id="evaluacion">
                             {% bootstrap_field motivo_form.evaluacion_kinesica %}
                         </div>
-                    </div>
-                    <div class="panel panel-info">
-                        <div class="panel-body">
-                            {% bootstrap_field form.observaciones %}
-                        </div>
+                        <div class="tab-pane" id="observaciones">
+                                {% bootstrap_field form.observaciones %}
+                            </div>
                     </div>
                 </div>
             </div>
@@ -156,7 +152,7 @@
         (function($){
             $(document).ready(function(){
                 $({% if formsets.0.forms %}'#more_objetivo div.inline_formset'
-                {% else %}'#empty_form'{% endif %}).formset({
+                {% else %}'#empty_form div.inline_formset'{% endif %}).formset({
                     deleteText: 'Eliminar',
                     prefix: '{{ formsets.0.prefix }}',
                     addButton: '#addNewButton',

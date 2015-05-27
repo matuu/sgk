@@ -83,7 +83,7 @@ class Persona(BaseModel):
                                       blank=True, null=True)
     observaciones = models.TextField(u'Observaciones', blank=True)
     # relaciones
-    contacto = models.ForeignKey(Contacto, verbose_name=u'Contacto', null=True)
+    contacto = models.ForeignKey(Contacto, verbose_name=u'Contacto', null=True, blank=True)
     profesion = models.ForeignKey(Profesion, verbose_name=u'Profesión', null=True)
 
     def __unicode__(self):

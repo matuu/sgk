@@ -64,7 +64,7 @@ class TurnoCreateView(AuthenticatedMixin, CreateView):
 class TurnoEditView(AuthenticatedMixin, UpdateView):
     model = Turno
     form_class = TurnoForm
-    template_name = 'frontend/turno_form.html'
+    template_name = 'core/turno_form.html'
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS,
