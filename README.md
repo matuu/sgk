@@ -1,6 +1,6 @@
 sgk
 ===
-https://travis-ci.org/matuu/sgk.svg?branch=master
+![CI Travis](https://travis-ci.org/matuu/sgk.svg?branch=master)
 
 [![Join the chat at https://gitter.im/matuu/sgk](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/matuu/sgk?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
