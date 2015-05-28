@@ -15,9 +15,6 @@ install:
   - "python manage.py syncdb --noinput"
   - "python manage.py migrate"
  
-# virtualenv:
-#    system_site_packages: true
-
 # database creation
 #before_script:
 #  - psql -c 'create database preciosa;' -U postgres
