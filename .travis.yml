@@ -20,6 +20,7 @@ install:
 #  - psql -c 'create database preciosa;' -U postgres
 #  - psql -c 'CREATE EXTENSION postgis;' -U postgres -d preciosa
 #  - psql -c 'CREATE EXTENSION postgis_topology;' -U postgres -d preciosa
-
+script: cd sgk
+script: python manage.py syncdb && python manage.py migrate
 # command to run tests
-script: cd sgk && python manage.py test
+script: python manage.py test
