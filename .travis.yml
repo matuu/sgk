@@ -11,7 +11,9 @@ env:
 # command to install dependencies
 install:
   - "pip install -r requirements.txt"
-
+  - "cd sgk"
+  - "python manage.py syncdb"
+  - "python manage.py migrate"
 # virtualenv:
 #    system_site_packages: true
 
@@ -20,7 +22,6 @@ install:
 #  - psql -c 'create database preciosa;' -U postgres
 #  - psql -c 'CREATE EXTENSION postgis;' -U postgres -d preciosa
 #  - psql -c 'CREATE EXTENSION postgis_topology;' -U postgres -d preciosa
-script: cd sgk
-script: python manage.py syncdb && python manage.py migrate
+
 # command to run tests
-script: python manage.py test
+script: cd sgk && python manage.py test
