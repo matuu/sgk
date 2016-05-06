@@ -1,14 +1,15 @@
 ### base ###
-django<1.6
-pillow
+django==1.6
+pillow==2.6.1
 
 ### helpers ###
-south
-django-template-repl
-django-admin-tools
-django-filter
-django-tables2
-django-bootstrap3
-django-admin-bootstrapped
-pynliner
+South==1.0.1
+django-template-repl==0.3.0
+django-admin-tools==0.5.2
+django-filter==0.9.0
+django-tables2==0.15.0
+django-bootstrap3==5.0.2
+django-admin-bootstrapped==2.2.1
+pynliner==0.5.2
 -e git://github.com/matuu/django-enhanced-cbv.git#egg=django-enhanced-cbv
+django-datetime-widget==0.9.2

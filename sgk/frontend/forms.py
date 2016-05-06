@@ -65,7 +65,7 @@ class MotivoConsultaForm(ModelForm):
     class Meta:
         model = MotivoConsulta
         fields = ('id','motivo_consulta_paciente', 'diagnostico_medico', 'evaluacion_kinesica',
-                  'cantidad_sesiones', 'tratamientos_previos', 'fecha_alta', 'observaciones')
+                  'cantidad_sesiones', 'tratamientos_previos', 'fecha_alta')
 
 
 class ObjetivoInlineForm(BaseInlineFormSet):
